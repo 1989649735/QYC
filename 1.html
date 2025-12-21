@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快乐</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e53e3e',
+                        secondary: '#9f7aea',
+                        light: '#fdf2f8',
+                    },
+                    fontFamily: {
+                        display: ['Fredoka One', 'cursive'],
+                        literary: ['"Ma Shan Zheng"', 'cursive'],
+                    },
+                    animation: {
+                        'float': 'float 4s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 0.8s ease-out forwards',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' }
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .cursor-hidden {
+                opacity: 0 !important;
+                width: 0 !important;
+                margin-left: 0 !important;
+            }
+        }
+    </style>
+
+    <!-- 优先加载字体，备用系统字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            background: #fdf2f8;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* 顶部横幅 */
+        .banner {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(120deg, #fbc2eb 0%, #a6c1ee 100%);
+            position: relative;
+        }
+        .banner h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            color: #fff;
+            text-shadow: 0 4px 12px rgba(156, 39, 176, 0.2);
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards 0.3s;
+            font-family: 'Fredoka One', cursive;
+        }
+        .banner .scroll-tip {
+            position: absolute;
+            bottom: 30px;
+            color: #fff;
+            font-size: 1rem;
+            animation: float 4s ease-in-out infinite;
+            opacity: 0;
+            animation: fadeInUp 1s ease-out forwards 0.8s;
+        }
+
+        /* 礼物区域 - 核心修复：确保文字清晰可见 */
+        .gift-section {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+        }
+        .gift-section h2 {
+            color: #9f7aea;
+            font-size: 2.5rem;
+            margin-bottom: 60px;
+            opacity: 0;
+            font-family: 'Fredoka One', cursive;
+            transition: all 0.8s ease-out;
+            transform: translateY(20px);
+        }
+        /* 礼物盒：增强对比度 + 简化样式 */
+        .gift {
+            width: 320px;
+            height: 280px;
+            /* 深红色背景，提高文字对比度 */
+            background: #c5221f;
+            margin: 0 auto;
+            position: relative;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(197, 34, 31, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+            /* 最高层级，避免遮挡 */
+            z-index: 999;
+            /* 边框装饰，增强视觉 */
+            border: 3px solid #fff;
+        }
+        /* 移除半透明遮罩（核心：解决文字被遮挡） */
+        .gift-text {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            padding: 30px;
+            width: 100%;
+        }
+        /* 文字样式：高对比度 + 备用字体 + 加粗 */
+        .gift-word {
+            /* 优先书法字体，备用粗体系统字体 */
+            font-family: 'Ma Shan Zheng', "SimHei", "Microsoft YaHei", cursive;
+            font-size: 2.8rem;
+            /* 纯白色，最高对比度 */
+            color: #ffffff !important;
+            line-height: 2;
+            /* 深色文字阴影，增强可读性 */
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+            display: block;
+            /* 强制显示，无透明度 */
+            opacity: 1 !important;
+            /* 加粗，确保清晰 */
+            font-weight: bold;
+        }
+        .gift:hover .gift-word {
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+        .gift-section p {
+            margin-top: 40px;
+            font-size: 1.2rem;
+            color: #718096;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s ease-out;
+        }
+
+        /* 留言区域 */
+        .message-section {
+            padding: 100px 20px;
+            background: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+        .message-section::before {
+            content: '';
+            position: absolute;
+            top: 20%;
+            right: 10%;
+            width: 60px;
+            height: 60px;
+            background: rgba(159, 122, 234, 0.1);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        .message-section::after {
+            content: '';
+            position: absolute;
+            bottom: 20%;
+            left: 15%;
+            width: 40px;
+            height: 40px;
+            background: rgba(229, 62, 62, 0.1);
+            border-radius: 50%;
+            animation: float 4s ease-in-out infinite 1s;
+        }
+        .message-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .message-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .message-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(229, 62, 62, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e53e3e;
+            margin-right: 16px;
+            transition: transform 0.3s ease;
+        }
+        .message-icon:hover {
+            transform: scale(1.1);
+        }
+        .message-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #9f7aea;
+        }
+        .message-box {
+            width: 100%;
+            padding: 30px;
+            background: #fdf2f8;
+            border-radius: 10px;
+            border: 1px solid #fef0f7;
+            position: relative;
+            overflow: hidden;
+        }
+        .message-text {
+            color: rgba(74, 85, 104, 0.8);
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+            white-space: pre-line;
+        }
+        #typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            margin-left: 2px;
+            background-color: #e53e3e;
+            animation: blink 1s step-end infinite;
+            transition: all 0.5s ease;
+        }
+        .message-date {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: rgba(74, 85, 104, 0.5);
+            position: relative;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        /* 底部 */
+        .footer {
+            padding: 40px;
+            text-align: center;
+            background: #4a5568;
+            color: #fdf2f8;
+            position: relative;
+            overflow: hidden;
+        }
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, #e53e3e, #9f7aea);
+        }
+        .footer p {
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* 基础动画 */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部横幅 -->
+    <div class="banner">
+        <div class="absolute top-1/4 left-1/5 w-10 h-10 bg-primary/20 rounded-full" style="animation: float 6s ease-in-out infinite;"></div>
+        <div class="absolute top-1/2 right-1/4 w-6 h-6 bg-secondary/20 rounded-full" style="animation: float 4s ease-in-out infinite 1s;"></div>
+        <div class="absolute bottom-1/3 left-1/3 w-8 h-8 bg-primary/20 rounded-full" style="animation: float 3s ease-in-out infinite 2s;"></div>
+        
+        <h1>生日快乐，秦瑜辰！</h1>
+        <div class="scroll-tip">
+            <i class="fas fa-chevron-down"></i> 向下滚动查看更多
+        </div>
+    </div>
+
+    <!-- 礼物区域 - 极简结构，确保内容可见 -->
+    <div class="gift-section">
+        <h2 class="scroll-animate">小小心意</h2>
+        <div class="gift scroll-animate" data-delay="0.2s">
+            <div class="gift-text">
+                <span class="gift-word">1-1-2036</span>
+                <span class="gift-word">3-1-3024</span>
+            </div>
+        </div>
+        <p class="scroll-animate" data-delay="0.4s"> @拼多多驿站</p>
+    </div>
+
+    <!-- 留言区域 -->
+    <div class="message-section">
+        <div class="message-container">
+            <div class="message-header scroll-animate">
+                <div class="message-icon">
+                    <i class="fas fa-comment"></i>
+                </div>
+                <h3 class="message-title">我想对你说的话</h3>
+            </div>
+            
+            <div class="message-box scroll-animate" data-delay="0.2s">
+                <p class="message-text" id="typing-text"></p>
+                <span id="typing-cursor"></span>
+                <div class="message-date" id="message-date">
+                     愿你新的一岁，所求皆如愿，所行化坦途
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer class="footer">
+        <div class="absolute bottom-0 right-0 w-100 h-100 bg-white/5 rounded-tl-full"></div>
+        <p>生日快乐，秦瑜辰！</p>
+    </footer>
+
+    <script>
+        // 滚动动画：简化逻辑，优先显示礼物
+        function handleScrollAnimations() {
+            const elements = document.querySelectorAll('.scroll-animate');
+            elements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                const delay = parseFloat(element.dataset.delay) || 0;
+                
+                if (rect.top < window.innerHeight * 0.75) {
+                    if (!element.classList.contains('show')) {
+                        element.classList.add('show');
+                        setTimeout(() => {
+                            element.style.opacity = '1';
+                            element.style.transform = 'translateY(0)';
+                        }, delay * 1000);
+                    }
+                }
+            });
+        }
+
+        // 初始化：强制设置初始状态
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.scroll-animate').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+            });
+            
+            // 立即触发一次，确保礼物盒显示
+            handleScrollAnimations();
+            
+            // 打字机效果
+            const text = `亲爱的秦瑜辰：
+过了几天就是你的生日，首先只能提前祝你生日快乐！🎂
+
+这次的礼物虽然很小，但是希望你能喜欢，说实话我都后悔买这个礼物，感觉有点不上心！
+
+不过，希望在新的一岁里，你能够实现所有的梦想，每天都开开心心，无忧无虑，
+
+再次祝你生日快乐，秦瑜辰！`;
+            const typingEl = document.getElementById('typing-text');
+            const cursorEl = document.getElementById('typing-cursor');
+            let i = 0;
+            const speed = 50;
+
+            function type() {
+                if (i < text.length) {
+                    const char = text[i] === '\n' ? '<br>' : text[i];
+                    typingEl.innerHTML += char;
+                    i++;
+                    setTimeout(type, speed);
+                } else {
+                    setTimeout(() => {
+                        cursorEl.classList.add('cursor-hidden');
+                        document.getElementById('message-date').style.opacity = '1';
+                    }, 500);
+                }
+            }
+
+            // 监听留言区域可见性，触发打字
+            const observer = new IntersectionObserver(entries => {
+                if (entries[0].isIntersecting) {
+                    setTimeout(type, 500);
+                    observer.disconnect();
+                }
+            }, { threshold: 0.1 });
+            observer.observe(typingEl);
+        });
+
+        // 滚动/触摸监听
+        window.addEventListener('scroll', handleScrollAnimations);
+        window.addEventListener('touchmove', handleScrollAnimations);
+
+        // 兜底：500ms后强制显示礼物盒
+        setTimeout(() => {
+            const gift = document.querySelector('.gift');
+            if (gift) {
+                gift.style.opacity = '1';
+                gift.style.transform = 'translateY(0)';
+            }
+        }, 500);
+    </script>
+</body>
+</html>
