@@ -1,0 +1,705 @@
+<html lang="zh-CN"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们的相识时光</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4F9EFD',
+                        secondary: '#54D98C',
+                        dark: '#1E293B',
+                        light: '#F8FAFC',
+                        success: '#10B981',
+                        error: '#EF4444'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .animate-float {
+                animation: float 6s ease-in-out infinite;
+            }
+            .animate-float-delay {
+                animation: float 6s ease-in-out 2s infinite;
+            }
+            .animate-blink {
+                animation: blink 1s step-end infinite;
+            }
+            .answer-feedback {
+                transition: all 0.3s ease;
+                height: 0;
+                opacity: 0;
+                overflow: hidden;
+            }
+            .answer-feedback.show {
+                height: auto;
+                opacity: 1;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        /* 自定义动画 */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 打字机效果光标 */
+        .typing-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-b from-blue-50 to-indigo-50 text-dark min-h-screen">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-transparent">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-primary flex items-center gap-2">
+                <i class="fa fa-heart-o text-secondary animate-pulse"></i>
+                <span>我们的故事</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#timer" class="hover:text-primary transition-colors">相识计时</a>
+                <a href="#timeline" class="hover:text-primary transition-colors">回忆时间线</a>
+                <a href="#moments" class="hover:text-primary transition-colors">精彩瞬间</a>
+                <a href="#message" class="hover:text-primary transition-colors">留言板</a>
+                <a href="#questions" class="hover:text-primary transition-colors">问答互动</a>
+            </div>
+            <button class="md:hidden text-dark text-xl" id="menu-toggle">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#timer" class="py-2 hover:text-primary transition-colors">相识计时</a>
+                <a href="#timeline" class="py-2 hover:text-primary transition-colors">回忆时间线</a>
+                <a href="#moments" class="py-2 hover:text-primary transition-colors">精彩瞬间</a>
+                <a href="#message" class="py-2 hover:text-primary transition-colors">留言板</a>
+                <a href="#questions" class="py-2 hover:text-primary transition-colors">问答互动</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="pt-28 pb-20 md:pt-40 md:pb-32 px-4 relative overflow-hidden">
+        <div class="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-float"></div>
+        <div class="absolute bottom-10 right-10 w-40 h-40 bg-secondary/10 rounded-full blur-2xl animate-float-delay"></div>
+        
+        <div class="container mx-auto text-center relative z-10">
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 text-shadow opacity-0 transform translate-y-8 transition-all duration-1000" id="hero-title">
+                我们的相识时光
+            </h1>
+            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto mb-10 opacity-0 transform translate-y-8 transition-all duration-1000 delay-300" id="hero-subtitle">
+                从第一次相遇到现在的点点滴滴，都是值得珍藏的回忆
+            </p>
+            <a href="#timer" class="inline-block bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/30 hover:-translate-y-1 opacity-0 transform translate-y-8 transition-all duration-1000 delay-500" id="hero-button">
+                开始回忆 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </header>
+
+    <!-- 相识计时器 -->
+    <section id="timer" class="py-16 px-4 bg-white/80 backdrop-blur-sm rounded-2xl mx-4 md:mx-auto max-w-6xl shadow-xl -mt-10 relative z-20">
+        <div class="container mx-auto text-center">
+            <h2 class="text-2xl md:text-3xl font-bold mb-10 text-primary">我们已经相识</h2>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+                <div class="bg-light rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                    <div class="text-3xl md:text-5xl font-bold text-dark mb-2" id="days">0</div>
+                    <div class="text-dark/60">天</div>
+                </div>
+                <div class="bg-light rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                    <div class="text-3xl md:text-5xl font-bold text-dark mb-2" id="hours">0</div>
+                    <div class="text-dark/60">时</div>
+                </div>
+                <div class="bg-light rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                    <div class="text-3xl md:text-5xl font-bold text-dark mb-2" id="minutes">0</div>
+                    <div class="text-dark/60">分</div>
+                </div>
+                <div class="bg-light rounded-xl p-4 md:p-6 shadow-md hover:shadow-lg transition-shadow border border-gray-100">
+                    <div class="text-3xl md:text-5xl font-bold text-dark mb-2" id="seconds">0</div>
+                    <div class="text-dark/60">秒</div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-dark/50 text-sm">
+                从 <span class="text-primary font-medium">2025年4月6日 8:45</span> 开始
+            </div>
+        </div>
+    </section>
+
+    <!-- 回忆时间线 -->
+    <section id="timeline" class="py-20 px-4">
+        <div class="container mx-auto">
+            <h2 class="text-2xl md:text-3xl font-bold mb-16 text-center">我们的回忆时间线</h2>
+            
+            <div class="relative">
+                <!-- 时间线中轴线 -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-primary/20"></div>
+                
+                <!-- 时间线内容 -->
+                <div class="space-y-16 relative">
+                    <!-- 时间点1 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item="">
+                        <div class="md:w-1/2 md:pr-16 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">第一次相遇</h3>
+                            <p class="text-dark/70">在微信上偶然加了好友，从一个简单的"你好"开始了我们的故事。那时候还不知道，这个简单的开始会变成现在这样珍贵的回忆。</p>
+                        </div>
+                        <div class="z-10 order-1 md:order-2">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+                                <i class="fa fa-handshake-o"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-16 order-3 md:hidden mt-4">
+                            <div class="text-sm text-dark/50">2025年4月6日</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block">
+                            <div class="text-sm text-dark/50">2025年4月6日</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间点2 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item="">
+                        <div class="md:w-1/2 md:pr-16 order-2 hidden md:block">
+                            <div class="text-sm text-dark/50">2025年4月12日</div>
+                        </div>
+                        <div class="md:w-1/2 md:pr-16 order-2 md:order-1 md:hidden mb-4">
+                            <div class="text-sm text-dark/50">2025年4月12日</div>
+                        </div>
+                        <div class="z-10 order-1 md:order-2">
+                            <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg">
+                                <i class="fa fa-gamepad"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-secondary">第一次报菜名</h3>
+                            <p class="text-dark/70">我们聊到了喜欢的游戏，互相分享了自己玩过的游戏列表，发现有很多共同喜欢的游戏。从王者荣耀到原神，从塞尔达到星露谷，原来我们的兴趣如此相似。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间点3 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item="">
+                        <div class="md:w-1/2 md:pr-16 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">第一次聊八卦</h3>
+                            <p class="text-dark/70">那天我们聊了很久的八卦，从班长和团支书的小秘密，到隔壁班的趣闻。发现我们不仅游戏品味相似，连八卦的点都很一致，真是太奇妙了。</p>
+                        </div>
+                        <div class="z-10 order-1 md:order-2">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg">
+                                <i class="fa fa-comments-o"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-16 order-3 md:hidden mt-4">
+                            <div class="text-sm text-dark/50">2025年7月21日</div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block">
+                            <div class="text-sm text-dark/50">2025年7月21日</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 时间点4 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item="">
+                        <div class="md:w-1/2 md:pr-16 order-2 hidden md:block">
+                            <div class="text-sm text-dark/50">2025年7月22日</div>
+                        </div>
+                        <div class="md:w-1/2 md:pr-16 order-2 md:order-1 md:hidden mb-4">
+                            <div class="text-sm text-dark/50">2025年7月22日</div>
+                        </div>
+                        <div class="z-10 order-1 md:order-2">
+                            <div class="w-10 h-10 rounded-full bg-secondary text-white flex items-center justify-center shadow-lg">
+                                <i class="fa fa-music"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-secondary">第一次一起听歌</h3>
+                            <p class="text-dark/70">在网易云上一起听了歌单，发现彼此的音乐品味也很合拍。从流行到摇滚，从古典到电子，每一首歌都像是为我们的友谊增添了一个音符。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 现在 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item="">
+                        <div class="md:w-1/2 md:pr-16 md:text-right order-2 md:order-1 mt-6 md:mt-0">
+                            <h3 class="text-xl font-bold mb-2 text-primary">今天</h3>
+                            <p class="text-dark/70">我们已经相识了<span class="font-medium text-primary" id="days-text">0</span>天，这段时光里的每一个瞬间都值得被珍藏。期待未来还有更多的第一次，更多的美好回忆。</p>
+                        </div>
+                        <div class="z-10 order-1 md:order-2">
+                            <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center shadow-lg animate-pulse">
+                                <i class="fa fa-heart"></i>
+                            </div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block"></div>
+                        <div class="md:w-1/2 md:pl-16 order-3 md:hidden mt-4">
+                            <div class="text-sm text-dark/50" id="current-date"></div>
+                        </div>
+                        <div class="md:w-1/2 md:pl-16 order-3 hidden md:block">
+                            <div class="text-sm text-dark/50" id="current-date-desktop"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 留言板 -->
+    <section id="message" class="py-20 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-16 text-center">留言板</h2>
+            
+            <div class="bg-white rounded-2xl shadow-xl p-6 md:p-10 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute -top-20 -right-20 w-40 h-40 bg-primary/5 rounded-full"></div>
+                <div class="absolute -bottom-10 -left-10 w-20 h-20 bg-secondary/5 rounded-full"></div>
+                
+                <div class="relative z-10">
+                    <div class="flex items-center mb-8">
+                        <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                            <i class="fa fa-user-o text-xl"></i>
+                        </div>
+                        <div class="ml-4">
+                            <div class="font-bold">给你的留言</div>
+                            <div class="text-sm text-dark/50">一些想对你说的话</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 留言内容 -->
+                    <div id="message-card" class="w-full p-6 bg-light rounded-lg border border-gray-200 relative overflow-hidden">
+                        <!-- 装饰元素 -->
+                        <div class="absolute -top-10 -right-10 w-20 h-20 bg-primary/5 rounded-full"></div>
+                        <div class="absolute -bottom-5 -left-5 w-10 h-10 bg-secondary/5 rounded-full"></div>
+                        
+                        <p class="text-dark/80 leading-relaxed whitespace-pre-line relative z-10" id="typing-text">
+                        </p>
+                        <span class="typing-cursor bg-primary animate-blink relative z-10"></span>
+                        <div class="mt-4 text-sm text-dark/50 relative z-10" id="message-date" style="opacity: 0;">
+                            写于我们相识的日子
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 问答互动区域 -->
+    <section id="questions" class="py-20 px-4 bg-white">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-16 text-center">问答互动</h2>
+            
+            <div class="bg-light rounded-2xl shadow-lg p-6 md:p-10">
+                <form id="questions-form" class="space-y-8">
+                    <!-- 问题1 -->
+                    <div class="question-item">
+                        <label class="block text-lg font-medium mb-3">1. 你的生日是什么时候呢？</label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="answer1" placeholder="请输入你的生日" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <button type="button" onclick="checkAnswer(1)" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-primary/30">
+                                检查答案
+                            </button>
+                        </div>
+                        <div id="feedback1" class="answer-feedback text-sm"></div>
+                    </div>
+                    
+                    <!-- 问题2 -->
+                    <div class="question-item">
+                        <label class="block text-lg font-medium mb-3">2. 我的生日你还记得吗？</label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="answer2" placeholder="请输入我的生日" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <button type="button" onclick="checkAnswer(2)" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-primary/30">
+                                检查答案
+                            </button>
+                        </div>
+                        <div id="feedback2" class="answer-feedback text-sm"></div>
+                    </div>
+                    
+                    <!-- 问题3 -->
+                    <div class="question-item">
+                        <label class="block text-lg font-medium mb-3">3. 第一次认识我的别名是什么？</label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="answer3" placeholder="请输入第一次认识的别名" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <button type="button" onclick="checkAnswer(3)" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-primary/30">
+                                检查答案
+                            </button>
+                        </div>
+                        <div id="feedback3" class="answer-feedback text-sm"></div>
+                    </div>
+                    
+                    <!-- 问题4 -->
+                    <div class="question-item">
+                        <label class="block text-lg font-medium mb-3">4. 你喜欢的游戏之一</label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="answer4" placeholder="请输入你喜欢的游戏之一" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <button type="button" onclick="checkAnswer(4)" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-primary/30">检查答案</button>
+                        </div>
+                        <div id="feedback4" class="answer-feedback text-sm"></div>
+                    </div>
+                    
+                    <!-- 问题5 -->
+                    <div class="question-item">
+                        <label class="block text-lg font-medium mb-3">5. 除开父母你最爱的人是谁</label>
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <input type="text" id="answer5" placeholder="请输入答案" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all">
+                            <button type="button" onclick="checkAnswer(5)" class="bg-primary hover:bg-primary/90 text-white font-medium py-2 px-6 rounded-lg transition-all duration-300 shadow hover:shadow-primary/30">检查答案</button>
+                        </div>
+                        <div id="feedback5" class="answer-feedback text-sm"></div>
+                    </div>
+                    
+                    <!-- 进入下一界面按钮 -->
+                    <div class="text-center pt-6 border-t border-gray-200">
+                        <button type="button" onclick="proceedToNext()" class="bg-secondary hover:bg-secondary/90 text-white font-medium py-3 px-8 rounded-lg transition-all duration-300 shadow hover:shadow-secondary/30 text-lg">
+                            进入下一界面 <i class="fa fa-arrow-right ml-2"></i>
+                        </button>
+                        <p class="text-sm text-dark/50 mt-2">无论答案正确与否，你都可以进入下一界面</p>
+                    </div>
+                    
+                    <!-- 提交按钮 -->
+                    <div class="text-center pt-4">
+                        <button type="button" onclick="checkAllAnswers()" class="bg-secondary hover:bg-secondary/90 text-white font-medium py-3 px-10 rounded-lg transition-all duration-300 shadow hover:shadow-secondary/30 text-lg">
+                            提交所有答案
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-10 px-4 bg-dark text-white/70 text-center">
+        <div class="container mx-auto">
+            <p>用时光记录我们的故事 © <span id="current-year"></span></p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-weixin text-xl"></i></a>
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-qq text-xl"></i></a>
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-envelope-o text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-white/90', 'backdrop-blur-md', 'shadow-md');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-white/90', 'backdrop-blur-md', 'shadow-md');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+        // 移动端菜单
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 关闭移动端菜单（点击链接后）
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // 英雄区域动画
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('hero-title').classList.remove('opacity-0', 'translate-y-8');
+            }, 300);
+            
+            setTimeout(() => {
+                document.getElementById('hero-subtitle').classList.remove('opacity-0', 'translate-y-8');
+            }, 600);
+            
+            setTimeout(() => {
+                document.getElementById('hero-button').classList.remove('opacity-0', 'translate-y-8');
+            }, 900);
+        });
+        
+        // 计时器功能
+        function updateTimer() {
+            // 开始时间：2025年4月6日 8:45
+            const startDate = new Date(2025, 3, 6, 8, 45, 0); // 月份是从0开始的，所以4月是3
+            const now = new Date();
+            const diff = now - startDate;
+            
+            // 计算天、时、分、秒
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            // 更新DOM
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            document.getElementById('days-text').textContent = days;
+            
+            // 更新当前日期
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const currentDate = now.toLocaleDateString('zh-CN', options);
+            document.getElementById('current-date').textContent = currentDate;
+            document.getElementById('current-date-desktop').textContent = currentDate;
+        }
+        
+        // 初始化计时器并每秒更新
+        updateTimer();
+        setInterval(updateTimer, 1000);
+        
+        // 滚动动画 - 时间线
+        function checkTimelineItems() {
+            const items = document.querySelectorAll('[data-timeline-item]');
+            
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight * 0.85) {
+                    item.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }
+        
+        // 滚动动画 - 精彩瞬间
+        function checkMomentItems() {
+            const items = document.querySelectorAll('[data-moment-item]');
+            
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                
+                if (rect.top < windowHeight * 0.85) {
+                    item.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }
+        
+        // 打字机效果
+        function typeWriter(text, element, cursor, speed, delay) {
+            let i = 0;
+            
+            setTimeout(() => {
+                function type() {
+                    if (i < text.length) {
+                        element.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, speed);
+                    } else {
+                        // 打字完成后显示日期
+                        setTimeout(() => {
+                            document.getElementById('message-date').style.opacity = '1';
+                            document.getElementById('message-date').style.transition = 'opacity 0.5s ease';
+                        }, 500);
+                        cursor.style.display = 'none';
+                    }
+                }
+                type();
+            }, delay);
+        }
+        
+        // 检测元素是否在视口中
+        function isElementInViewport(el) {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
+                rect.bottom >= 0
+            );
+        }
+        
+        // 滚动触发打字动画
+        let typingStarted = false;
+        function checkMessageSection() {
+            const messageCard = document.getElementById('message-card');
+            
+            if (isElementInViewport(messageCard) && !typingStarted) {
+                typingStarted = true;
+                
+                const text = `嘿，仔细想想还挺奇妙的——我们从王者峡谷“打”出来的缘分，竟然一路延伸到了现在。虽然隔着屏幕，从QQ到微信，这小小的对话框，却成了我们交换世界的窗口。
+  每天和你聊聊不同的事，不知不觉成了一种温暖的日常。那些失落的瞬间、突然的快乐，甚至偶尔的小牢骚，在这里总能找到安放的回音。
+  即使从未在线下见过面，可那些互相倾听的深夜，都真真切切地织成了一张属于我们的网——一张珍贵又特别的网。谢谢你，让我在茫茫网络里遇见一个可以分享心跳的伙伴。
+  希望未来我们还能这样，在各自的星辰下努力，在小小的对话框里取暖。愿你的画笔永远蘸满星光，愿你的前路铺满斑斓的色彩！`;
+                
+                // 启动打字效果
+                typeWriter(
+                    text, 
+                    document.getElementById('typing-text'),
+                    document.querySelector('.typing-cursor'),
+                    30, // 打字速度，毫秒/字符
+                    500 // 延迟开始时间
+                );
+            }
+        }
+        
+        // 监听滚动事件
+        window.addEventListener('scroll', () => {
+            checkTimelineItems();
+            checkMomentItems();
+            checkMessageSection(); // 检查留言板区域是否可见
+        });
+        
+        // 初始检查
+        window.addEventListener('load', () => {
+            checkTimelineItems();
+            checkMomentItems();
+            checkMessageSection(); // 页面加载时检查一次
+        });
+        
+        // 答案判断功能 - 设置正确答案
+        const correctAnswers = {
+            1: "2008.12.24", // 你的生日的正确答案
+            2: "2009.2.8",    // 我的生日的正确答案
+            3: "轻罗含夕陈",   // 第一次认识的别名
+            4: ["第五人格", "和平精英", "曙光英雄", "英雄联盟", "光与夜之恋", "时空中的绘旅人", "恋与深空", "世界之外", "崩坏星穹铁道", "明日方舟", "原神", "我的世界", "穿越火线", "奇迹暖暖", "重返未来1999"],
+            5: ["我", "我自己", "自己"] // 新增问题的正确答案
+        };
+        
+        // 检查单个答案
+        function checkAnswer(questionNumber) {
+            const answerInput = document.getElementById(`answer${questionNumber}`);
+            const feedbackElement = document.getElementById(`feedback${questionNumber}`);
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            // 重置样式
+            answerInput.classList.remove('border-success', 'border-error');
+            feedbackElement.classList.remove('show');
+            
+            let isCorrect = false;
+            
+            if (questionNumber === 1 || questionNumber === 2) {
+                // 生日答案的特殊处理，支持多种格式（2008.12.24、2008-12-24、2008年12月24日等）
+                const correctAnswer = correctAnswers[questionNumber].toLowerCase();
+                isCorrect = checkBirthdayAnswer(userAnswer, correctAnswer);
+            } else if (questionNumber === 3) {
+                // 别名比较，忽略空格和大小写
+                const correctAnswer = correctAnswers[questionNumber].toLowerCase();
+                isCorrect = userAnswer.replace(/\s+/g, '') === correctAnswer.replace(/\s+/g, '');
+            } else if (questionNumber === 4) {
+                // 游戏答案检查
+                isCorrect = correctAnswers[4].some(game => 
+                    game.toLowerCase() === userAnswer.trim().toLowerCase()
+                );
+            } else if (questionNumber === 5) {
+                // 新增问题的答案检查
+                isCorrect = correctAnswers[5].some(answer => 
+                    answer.toLowerCase() === userAnswer.trim().toLowerCase()
+                );
+            }
+            
+            // 显示反馈
+            if (isCorrect) {
+                feedbackElement.innerHTML = `<span class="text-success flex items-center"><i class="fa fa-check-circle mr-1"></i> 回答正确！</span>`;
+                answerInput.classList.add('border-success');
+            } else {
+                let errorMessage = "回答不正确，请再试一次";
+                if (questionNumber === 4) {
+                    errorMessage = "再想想看？提示：是我们聊过的其中一款哦";
+                }
+                if (questionNumber === 5) {
+                    errorMessage = "再想想看？提示：是你看过的视频哦";
+                }
+                feedbackElement.innerHTML = `<span class="text-error flex items-center"><i class="fa fa-times-circle mr-1"></i> ${errorMessage}</span>`;
+                answerInput.classList.add('border-error');
+            }
+            
+            feedbackElement.classList.add('show');
+            
+            // 检查是否所有答案都正确
+            //checkAllCorrect();
+        }
+        
+        // 检查所有答案
+        function checkAllAnswers() {
+            for (let i = 1; i <= 5; i++) { // 修改为检查5个问题
+                checkAnswer(i);
+            }
+        }
+        
+/*
+         // 检查是否所有答案都正确，如果是则跳转页面
+        function checkAllCorrect() {
+            const allCorrect = [1, 2, 3, 4, 5].every(num => { // 修改为检查5个问题
+                const input = document.getElementById(`answer${num}`);
+                return input.classList.contains('border-success');
+            });                           
+            if (allCorrect) {
+                // 所有答案都正确，添加成功动画并跳转
+                setTimeout(() => {
+                      // 可以替换为你想要跳转的页面URL
+                    window.location.href = "./image/2.html";
+                }, 1000); // 延迟1秒跳转，让用户看到成功提示
+            }
+        }                       
+        */
+        // 生日答案的特殊处理函数，支持多种格式匹配
+        function checkBirthdayAnswer(userAnswer, correctAnswer) {
+            // 标准化用户输入和正确答案
+            // 移除所有非数字字符
+            const normalizedUserAnswer = userAnswer.replace(/\D/g, '');
+            const normalizedCorrectAnswer = correctAnswer.replace(/\D/g, '');
+            
+            // 比较数字部分是否相同
+            return normalizedUserAnswer === normalizedCorrectAnswer;
+        }
+        
+        // 直接进入下一界面（无论答案正确与否）
+        function proceedToNext() {
+            // 显示过渡效果
+            const button = event.target;
+            const originalText = button.innerHTML;
+            
+            button.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i>进入中...';
+            button.disabled = true;
+            
+            // 延迟跳转，让用户看到加载效果
+            setTimeout(() => {
+                window.location.href = "./image/2.html";
+            }, 1000);
+        }
+        
+        // 设置当前年份
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+
+
+    </body></html>

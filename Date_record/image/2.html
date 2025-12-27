@@ -1,0 +1,474 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珍贵的回忆 - 时间轴</title>
+    <!-- 引入Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体，使用温暖色调 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E67E22', // 温暖橙色作为主色调
+                        secondary: '#3498DB', // 蓝色作为辅助色
+                        accent: '#E74C3C',    // 强调色
+                        dark: '#34495E',      // 深色文本
+                        light: '#FDF5E6',     // 浅色背景
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .timeline-dot::before {
+                content: '';
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                border-radius: 50%;
+                background-color: theme('colors.primary');
+                left: -10px;
+                top: 0;
+                box-shadow: 0 0 0 4px rgba(230, 126, 34, 0.2);
+            }
+            .timeline-line::before {
+                content: '';
+                position: absolute;
+                width: 2px;
+                height: 100%;
+                background-color: rgba(230, 126, 34, 0.3);
+                left: 0;
+                top: 0;
+            }
+        }
+        
+        /* 平滑滚动 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 图片悬停效果 */
+        .hover-zoom {
+            overflow: hidden;
+        }
+        .hover-zoom img {
+            transition: transform 0.7s ease;
+        }
+        .hover-zoom:hover img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+
+<body class="bg-gradient-to-br from-light to-amber-50 text-dark min-h-screen">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300 bg-white/80 backdrop-blur-sm shadow-md">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <a href="#" class="text-xl font-bold text-primary flex items-center gap-2">
+                <i class="fa fa-heart text-accent animate-pulse"></i>
+                <span>珍贵的回忆</span>
+            </a>
+            <div class="hidden md:flex space-x-6">
+                <a href="#greeting" class="hover:text-primary transition-colors">欢迎</a>
+                <a href="#timeline" class="hover:text-primary transition-colors">回忆时间轴</a>
+                <a href="#gallery" class="hover:text-primary transition-colors">回忆画廊</a>
+                <a href="#message" class="hover:text-primary transition-colors">留言</a>
+            </div>
+            <button class="md:hidden text-dark text-xl" id="menu-toggle">
+                <i class="fa fa-bars"></i>
+            </button>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg absolute w-full">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#greeting" class="py-2 hover:text-primary transition-colors">欢迎</a>
+                <a href="#timeline" class="py-2 hover:text-primary transition-colors">回忆时间轴</a>
+                <a href="#gallery" class="py-2 hover:text-primary transition-colors">回忆画廊</a>
+                <a href="#message" class="py-2 hover:text-primary transition-colors">留言</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 欢迎区域 -->
+    <section id="greeting" class="pt-32 pb-20 px-4 relative overflow-hidden">
+        <div class="absolute top-10 right-10 w-40 h-40 bg-primary/10 rounded-full blur-3xl animate-pulse"></div>
+        <div class="absolute bottom-20 left-20 w-60 h-60 bg-secondary/10 rounded-full blur-3xl"></div>
+        
+        <div class="container mx-auto text-center relative z-10">
+            <div class="inline-block p-3 bg-white rounded-full shadow-lg mb-8 opacity-0 transform scale-90 transition-all duration-700" id="welcome-badge">
+                <i class="fa fa-book text-3xl text-primary"></i>
+            </div>
+            <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 text-shadow opacity-0 transform translate-y-8 transition-all duration-1000 delay-300" id="welcome-title">
+                秦瑜辰的回忆时间轴
+            </h1>
+            <p class="text-lg md:text-xl text-dark/70 max-w-2xl mx-auto mb-10 opacity-0 transform translate-y-8 transition-all duration-1000 delay-500" id="welcome-subtitle">
+                每一段回忆都是时光的礼物，记录着我们从陌生到熟悉的点点滴滴。
+                沿着时间轴，重温那些珍贵的瞬间...
+            </p>
+            <a href="#timeline" class="inline-block bg-primary hover:bg-primary/90 text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-primary/30 hover:-translate-y-1 opacity-0 transform translate-y-8 transition-all duration-1000 delay-700" id="welcome-button">
+                浏览时间轴 <i class="fa fa-arrow-down ml-2"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- 相识天数展示 -->
+    <section class="py-12 px-4 bg-white/80 backdrop-blur-sm rounded-2xl mx-4 md:mx-auto max-w-4xl shadow-xl -mt-10 relative z-20">
+        <div class="container mx-auto text-center">
+            <h2 class="text-xl md:text-2xl font-bold mb-6 text-primary">我们的故事已持续</h2>
+            
+            <div class="flex flex-wrap justify-center gap-6 items-end">
+                <div class="text-center">
+                    <div class="text-4xl md:text-6xl font-bold text-dark" id="days-count">0</div>
+                    <div class="text-dark/60">天</div>
+                </div>
+                <div class="text-2xl text-dark/40">
+                    <i class="fa fa-heart-o animate-pulse text-accent"></i>
+                </div>
+                <div class="text-center">
+                    <div class="text-4xl md:text-6xl font-bold text-dark" id="hours-count">0</div>
+                    <div class="text-dark/60">小时</div>
+                </div>
+            </div>
+            
+            <div class="mt-6 text-dark/50 text-sm">
+                每一分每一秒都值得珍惜
+            </div>
+        </div>
+    </section>
+
+    <!-- 时间轴回忆 -->
+    <section id="timeline" class="py-20 px-4">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-16 text-center">回忆时间轴</h2>
+            
+            <!-- 时间轴容器 -->
+            <div class="relative pl-8 timeline-line">
+                <!-- 时间点1 -->
+                <div class="relative mb-16 timeline-dot opacity-0 transform translate-y-8 transition-all duration-700" data-timeline-item>
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fa fa-handshake-o"></i>
+                                </div>
+                                <h3 class="text-xl font-bold ml-4 text-primary">初识时刻</h3>
+                            </div>
+                            <span class="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                                2025年4月5日
+                            </span>
+                        </div>
+                        <p class="text-dark/70 leading-relaxed">
+                            短短1个多小时，我们从陌生人以118条消息，迅速打开了新的友谊篇章。谁能想到那次偶然的相遇，会成为这段珍贵友谊的开始。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 时间点2 -->
+                <div class="relative mb-16 timeline-dot opacity-0 transform translate-y-8 transition-all duration-700 delay-200" data-timeline-item>
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fa fa-comment"></i>
+                                </div>
+                                <h3 class="text-xl font-bold ml-4 text-primary">深夜长谈</h3>
+                            </div>
+                            <span class="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                                2025年5月的某个夜晚
+                            </span>
+                        </div>
+                        <p class="text-dark/70 leading-relaxed">
+                            记得有一次和沁园春聊到凌晨，从生活趣事到理想，我们互相理解。那种被理解和倾听的感觉，真的很温暖。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 时间点3 -->
+                <div class="relative mb-16 timeline-dot opacity-0 transform translate-y-8 transition-all duration-700 delay-400" data-timeline-item>
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+                                    <i class="fa fa-paint-brush"></i>
+                                </div>
+                                <h3 class="text-xl font-bold ml-4 text-secondary">珍贵的礼物</h3>
+                            </div>
+                            <span class="bg-secondary/10 text-secondary px-4 py-1 rounded-full text-sm font-medium">
+                                2025年6月21日
+                            </span>
+                        </div>
+                        <p class="text-dark/70 leading-relaxed">
+                            你特意帮我画了一幅素描，还送了一盒奥利奥，那份心意让我非常感动。简单的礼物却承载着深厚的友谊。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 时间点4 -->
+                <div class="relative mb-16 timeline-dot opacity-0 transform translate-y-8 transition-all duration-700 delay-600" data-timeline-item>
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary">
+                                    <i class="fa fa-trophy"></i>
+                                </div>
+                                <h3 class="text-xl font-bold ml-4 text-primary">辉煌成就</h3>
+                            </div>
+                            <span class="bg-primary/10 text-primary px-4 py-1 rounded-full text-sm font-medium">
+                                2025年6月22日
+                            </span>
+                        </div>
+                        <p class="text-dark/70 leading-relaxed">
+                            秦瑜辰凭借作品《心绪之关于阅读》拿下省级一等奖，得知这个消息时真心为你感到高兴。才华和努力终于得到了认可。
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 时间点5 -->
+                <div class="relative timeline-dot opacity-0 transform translate-y-8 transition-all duration-700 delay-800" data-timeline-item>
+                    <div class="bg-white rounded-xl shadow-lg p-6 md:p-8 hover:shadow-xl transition-shadow">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <div class="flex items-center mb-4 md:mb-0">
+                                <div class="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary">
+                                    <i class="fa fa-cutlery"></i>
+                                </div>
+                                <h3 class="text-xl font-bold ml-4 text-secondary">新奇体验</h3>
+                            </div>
+                            <span class="bg-secondary/10 text-secondary px-4 py-1 rounded-full text-sm font-medium">
+                                2025年7月8日
+                            </span>
+                        </div>
+                        <p class="text-dark/70 leading-relaxed">
+                            我们第一次听说了赛博吃法
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 回忆画廊 -->
+    <section id="gallery" class="py-16 px-4">
+        <div class="container mx-auto max-w-6xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-16 text-center">回忆画廊</h2>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 图片1 - 初识时刻 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-zoom opacity-0 transform translate-y-8 transition-all duration-700" data-gallery-item>
+                    <img src="./4.jpg" alt="初识时刻的照片" class="w-full h-64 object-cover">
+                </div>
+            
+                <!-- 图片2 - 深夜长谈 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-zoom opacity-0 transform translate-y-8 transition-all duration-700 delay-200" data-gallery-item>
+                    <img src="./5.jpg" alt="深夜长谈的纪念" class="w-full h-64 object-cover">
+                </div>
+                
+                <!-- 图片3 - 珍贵的礼物 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-zoom opacity-0 transform translate-y-8 transition-all duration-700 delay-400" data-gallery-item>
+                    <img src="./6.jpg" alt="收到的珍贵礼物" class="w-full h-64 object-cover">
+                </div>
+                
+                <!-- 图片4 - 辉煌成就 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-zoom opacity-0 transform translate-y-8 transition-all duration-700 delay-600" data-gallery-item>
+                    <img src="./7.jpg" alt="获得的省级一等奖证书" class="w-full h-64 object-cover">
+                </div>
+                
+                <!-- 图片5 - 新奇体验 -->
+                <div class="bg-white rounded-xl shadow-lg overflow-hidden hover-zoom opacity-0 transform translate-y-8 transition-all duration-700 delay-800" data-gallery-item>
+                    <img src="./8.jpg" alt="赛博吃法的体验" class="w-full h-64 object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 留言栏目（作为独立栏目） -->
+    <section id="message" class="py-20 px-4 bg-white/50">
+        <div class="container mx-auto max-w-4xl">
+            <h2 class="text-2xl md:text-3xl font-bold mb-10 text-center text-primary">
+                <i class="fa fa-comment-o mr-3"></i> 留言
+            </h2>
+            
+            <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12 relative overflow-hidden">
+                <!-- 装饰元素 -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-primary/10 rounded-full"></div>
+                <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-secondary/10 rounded-full"></div>
+                
+                <div class="relative z-10 text-center">
+                    <p class="text-xl md:text-2xl lg:text-3xl text-dark/80 italic leading-relaxed">
+                        "我们爱的人永远是自己"
+                    </p>
+                    
+                    <p class="text-xl md:text-2xl lg:text-3xl text-dark/80 italic leading-relaxed">
+                        "有时候安卓也不逊于iPhone"
+                    </p>
+
+    
+                    
+                    <div class="mt-8 inline-block">
+                        <div class="w-20 h-1 bg-primary/30 mx-auto mb-4"></div>
+                        <p class="text-dark/50">一段简单的思考</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 返回按钮 -->
+    <section class="py-10 px-4 text-center">
+        <a href="../Date.html" class="inline-flex items-center justify-center bg-dark/80 hover:bg-dark text-white font-medium py-3 px-8 rounded-full transition-all duration-300 shadow-lg hover:shadow-dark/30">
+            <i class="fa fa-arrow-left mr-2"></i> 返回上一页
+        </a>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-10 px-4 bg-dark text-white/70 text-center">
+        <div class="container mx-auto">
+            <p>我们的故事还在继续... © <span id="current-year"></span></p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-weixin text-xl"></i></a>
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-qq text-xl"></i></a>
+                <a href="#" class="hover:text-primary transition-colors"><i class="fa fa-envelope-o text-xl"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        const navbar = document.getElementById('navbar');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-md');
+                navbar.classList.remove('shadow-sm');
+            } else {
+                navbar.classList.remove('shadow-md');
+                navbar.classList.add('shadow-sm');
+            }
+        });
+        
+        // 移动端菜单
+        const menuToggle = document.getElementById('menu-toggle');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        menuToggle.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 关闭移动端菜单（点击链接后）
+        const mobileLinks = mobileMenu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+        
+        // 欢迎区域动画
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('welcome-badge').classList.remove('opacity-0', 'scale-90');
+                document.getElementById('welcome-badge').classList.add('scale-100');
+            }, 300);
+            
+            setTimeout(() => {
+                document.getElementById('welcome-title').classList.remove('opacity-0', 'translate-y-8');
+            }, 600);
+            
+            setTimeout(() => {
+                document.getElementById('welcome-subtitle').classList.remove('opacity-0', 'translate-y-8');
+            }, 900);
+            
+            setTimeout(() => {
+                document.getElementById('welcome-button').classList.remove('opacity-0', 'translate-y-8');
+            }, 1200);
+            
+            // 初始化其他动画
+            setTimeout(() => {
+                checkTimelineItems();
+                checkGalleryItems();
+                checkMessageSection();
+            }, 1500);
+        });
+        
+        // 更新相识天数
+        function updateDaysCount() {
+            // 开始时间：2025年4月5日（初识日）
+            const startDate = new Date(2025, 3, 5);
+            const now = new Date();
+            const diff = now - startDate;
+            
+            // 计算天和小时
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            
+            // 更新DOM
+            document.getElementById('days-count').textContent = days;
+            document.getElementById('hours-count').textContent = hours;
+        }
+        
+        // 初始更新并设置定时器
+        updateDaysCount();
+        setInterval(updateDaysCount, 3600000); // 每小时更新一次
+        
+        // 设置当前年份
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // 时间轴项目动画
+        function checkTimelineItems() {
+            const items = document.querySelectorAll('[data-timeline-item]');
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    item.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }
+        
+        // 画廊项目动画
+        function checkGalleryItems() {
+            const items = document.querySelectorAll('[data-gallery-item]');
+            items.forEach(item => {
+                const rect = item.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    item.classList.remove('opacity-0', 'translate-y-8');
+                }
+            });
+        }
+        
+        // 留言区域动画
+        function checkMessageSection() {
+            const section = document.getElementById('message');
+            if (section) {
+                const rect = section.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    section.classList.add('animate-fadeIn');
+                }
+            }
+        }
+        
+        // 滚动时检查动画
+        window.addEventListener('scroll', () => {
+            checkTimelineItems();
+            checkGalleryItems();
+            checkMessageSection();
+        });
+    </script>
+</body>
+</html>
+    
